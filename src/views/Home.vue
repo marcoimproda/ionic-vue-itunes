@@ -22,8 +22,9 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonInput, toastController } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: 'Home',
@@ -33,6 +34,30 @@ export default defineComponent({
     IonPage,
     IonTitle,
     IonToolbar
+  },
+  data() {
+    return {
+      userInput: '',
+    };
+  },
+  computed: {
+...mapGetters("search", [
+      "userSearch", "music"
+    ])
+  },
+  methods: {
+...mapActions("search", ["musicSearch"]),
+async getSearch(payload: any) {
+      this.musicSearch(payload).then(async () => {
+        console.log(this.music);
+        const toast = await toastController
+        .create({
+          message: 'Test',
+          duration: 4000
+        });
+      return toast.present();
+        });
+    },
   }
 });
 </script>
