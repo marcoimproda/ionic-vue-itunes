@@ -2,7 +2,8 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>IonVueTunes🎵</ion-title>
+          <ion-title>IonVueTunes🎵</ion-title>
+          <ion-back-button @click="goBack()">Go Back</ion-back-button>
       </ion-toolbar>
     </ion-header>
     
@@ -12,20 +13,24 @@
           <ion-title size="large">IonVueTunes🎵</ion-title>
         </ion-toolbar>
       </ion-header>
-    
-      <div id="container">
-        <ion-searchbar v-on:keyup.enter="getSearch(userInput)" color="light" v-model="userInput" placeholder="Search for an artist or a song 🎵"></ion-searchbar>
-        <ion-button v-on:keyup.enter="getSearch(userInput)" @click="getSearch(userInput)">Search</ion-button>
-      </div>
-      <div class="containerCards" v-if="music.results != ''">
-      <ion-card class="card" v-bind:key="music.id" v-for="music in music.results">
+
+      <div class="container" v-if="track">
+      <ion-card class="card" v-bind:key="track.id" v-for="track in track.results">
         <ion-card-header>
-        <ion-card-subtitle>{{music.trackName}}</ion-card-subtitle>
-        <ion-card-title>{{music.artistName}}</ion-card-title>
-        <img :src="music.artworkUrl60" alt="">
+        <ion-card-subtitle>🎵 Album: <strong>{{track.collectionName}}</strong></ion-card-subtitle>
+        <ion-card-subtitle>🎵 Song: <strong>{{track.trackName}}</strong></ion-card-subtitle>
+        <ion-card-title>🎤 {{track.artistName}}</ion-card-title>
+        <img class="artwork" :src="track.artworkUrl60" alt="Image">
         </ion-card-header>
         <ion-card-content>
-          <ion-button @click="gotoPage(music.trackId)">Go</ion-button>
+          <h3>💲 Price: <strong>{{track.trackPrice}} $</strong></h3>
+          <ion-datetime class="time" display-format="MMM DD, DDD. YY" :value="track.releaseDate" disabled></ion-datetime>
+          <audio controls v-if="track.previewUrl">
+          <source :src="track.previewUrl" type="audio/mp4">
+          </audio>
+          <div class="ion-text-center">
+                      <a :href="track.trackViewUrl" target="_blank"><ion-button>More</ion-button></a>
+          </div>
         </ion-card-content>
       </ion-card>
       </div>
@@ -35,48 +40,52 @@
 
 <script lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonInput, toastController, IonSearchbar } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, defineComponent } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Card',
   components: {
     IonContent,
     IonHeader,
     IonPage,
     IonTitle,
-    IonToolbar,
-    IonSearchbar,
+    IonToolbar
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
+    const id = ref(route.params.id || null);
     return {
-      router
+      router,
+      route,
+      id
     };
   },
   data() {
     return {
-      userInput: '',
       trackPreview: '',
       buttonPlaying: 'Play'
     };
   },
   computed: {
 ...mapGetters("search", [
-      "userSearch", "music"
+      "userTrack", "track"
     ])
   },
+  mounted() {
+        this.getTrack(this.id);
+    },
   methods: {
-...mapActions("search", ["musicSearch"]),
-async getSearch(payload: any) {
-      this.musicSearch(payload).then(async () => {
+...mapActions("search", ["trackSearch"]),
+async getTrack(id: any) {
+      this.trackSearch(id).then(async () => {
         const toast = await toastController
         .create({
           message: 'Operation completed',
           duration: 2000
         });
-        this.userInput = '';
       return toast.present();
         });
     },
@@ -95,55 +104,51 @@ async getSearch(payload: any) {
       this.trackPreview.play();
       }
     },
-    gotoPage(id: any) {
-        this.router.push("/card/" + id);
+    goBack() {
+      this.router.back();
     },
   }
 });
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 30%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-
-/* Cards */
-
-.containerCards {
+/* Card */
+.container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   position: relative;
-  top: 35%;
+  top: 25%;
 }
 
 .card {
   width: 30%; 
   border-radius: 5%;
+}
+
+.artwork {
+  border-radius: 25px;
+}
+
+.time {
+  font-size: medium;
+  font-style: normal;
+  color: black;
+  font-weight: 600;
+}
+
+/* Audio Player */
+
+audio {
+  position: relative;
+  right: 3%;
+  width: 100%;
+}
+
+/* Back button */
+
+ion-back-button {
+  width: 20%;
 }
 
 /* Mobile CSS */
@@ -156,7 +161,7 @@ async getSearch(payload: any) {
 
 @media (max-width: 728px) {
 .containerCards {
- justify-content: unset;
+ justify-content: center;
 }
  .card {
   width: 70%; 

@@ -25,6 +25,17 @@ const SearchService = {
             );
         }
     },
+    userTrack: async function(id: any) {
+        try {            
+            const url = `https://itunes.apple.com/lookup?id=${id}`;
+                return ApiService.get(url);
+        } catch (error) {
+            throw new ResponseError(
+                error.status,
+                error.error.message
+            );
+        }
+    },
 }
 
 export { SearchService, ResponseError };
