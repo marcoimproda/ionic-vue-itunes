@@ -15,7 +15,7 @@
     
       <div id="container">
         <ion-searchbar v-on:keyup.enter="getSearch(userInput)" color="light" v-model="userInput" placeholder="Search for an artist or a song 🎵"></ion-searchbar>
-        <ion-button v-on:keyup.enter="getSearch(userInput)" @click="getSearch(userInput)">Search</ion-button>
+        <ion-button v-on:keyup.enter="getSearch(userInput)" @click="getSearch(userInput)">Search</ion-button><ion-button v-if="music !='' && payload.elementNumber < 50" @click="addResult()" color="success">Load more results</ion-button><ion-button color="danger" v-if="payload.elementNumber >= 50">Maximum limit reached</ion-button>
       </div>
       <div class="containerCards" v-if="music.results != ''">
       <ion-card class="card" v-bind:key="music.id" v-for="music in music.results">
@@ -57,6 +57,10 @@ export default defineComponent({
   },
   data() {
     return {
+      payload: {
+        userInput: '',
+        elementNumber: 5,
+      },
       userInput: '',
       trackPreview: '',
       buttonPlaying: 'Play'
@@ -70,7 +74,8 @@ export default defineComponent({
   methods: {
 ...mapActions("search", ["musicSearch"]),
 async getSearch(payload: any) {
-      this.musicSearch(payload).then(async () => {
+      this.payload.userInput = payload;
+      this.musicSearch(this.payload).then(async () => {
         const toast = await toastController
         .create({
           message: 'Operation completed',
@@ -96,6 +101,10 @@ async getSearch(payload: any) {
     },
     gotoPage(id: any) {
         this.router.push("/card/" + id);
+    },
+    addResult() {
+      this.payload.elementNumber += 5;
+      this.getSearch(this.userInput);
     }
   }
 });
@@ -104,10 +113,11 @@ async getSearch(payload: any) {
 <style scoped>
 #container {
   text-align: center;
+  
   position: absolute;
   left: 0;
   right: 0;
-  top: 30%;
+  top: 25%;
   transform: translateY(-50%);
 }
 
@@ -119,7 +129,9 @@ async getSearch(payload: any) {
 #container p {
   font-size: 16px;
   line-height: 22px;
+  
   color: #8c8c8c;
+  
   margin: 0;
 }
 
@@ -134,7 +146,7 @@ async getSearch(payload: any) {
   flex-wrap: wrap;
   justify-content: space-between;
   position: relative;
-  top: 35%;
+  top: 30%;
 }
 
 .card {

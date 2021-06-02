@@ -15,8 +15,8 @@ class ResponseError extends Error {
 
 const SearchService = {
     userSearch: async function(payload: any) {
-        try {            
-            const url = `https://itunes.apple.com/search?term=${payload}`;
+        try {      
+            const url = `https://itunes.apple.com/search?term=${payload.userInput}&limit=${payload.elementNumber}`;
                 return ApiService.get(url);
         } catch (error) {
             throw new ResponseError(

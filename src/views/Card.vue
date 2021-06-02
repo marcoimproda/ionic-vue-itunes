@@ -27,12 +27,13 @@
         <img class="artwork" :src="track.artworkUrl60" alt="Image">
         </ion-card-header>
         <ion-card-content>
-          <h3>💲 Price: <strong>{{track.trackPrice}} $</strong></h3>
+         <br><h3>💲 Price: <strong>{{track.trackPrice}} $</strong></h3>
           <ion-datetime class="time" display-format="MMM DD, DDD. YY" :value="track.releaseDate" disabled></ion-datetime>
-          <audio controls v-if="track.previewUrl">
+          <div class="ion-text-center">
+            <ion-button v-if="track.previewUrl" @click="onClick($event)" v-model="buttonPlaying" :color="btnColor">{{buttonPlaying}}</ion-button>
+          <audio v-if="track.previewUrl">
           <source :src="track.previewUrl" type="audio/mp4">
           </audio>
-          <div class="ion-text-center">
                       <a :href="track.trackViewUrl" target="_blank"><ion-button>More</ion-button></a>
           </div>
         </ion-card-content>
@@ -50,8 +51,9 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonInput, toastController, IonSearchbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonInput, IonButton, toastController, IonButtons } from '@ionic/vue';
 import { ref, defineComponent } from 'vue';
+import { arrowBackOutline } from "ionicons/icons";
 import { useRouter, useRoute } from 'vue-router';
 import { mapActions, mapGetters } from "vuex";
 
@@ -62,7 +64,9 @@ export default defineComponent({
     IonHeader,
     IonPage,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonButton,
+    IonButtons
   },
   setup() {
     const router = useRouter();
@@ -71,13 +75,16 @@ export default defineComponent({
     return {
       router,
       route,
-      id
+      id,
+      arrowBackOutline
     };
   },
   data() {
     return {
       trackPreview: '',
-      buttonPlaying: 'Play'
+      buttonPlaying: 'Play',
+      btnColor: 'success',
+      trackReady: false
     };
   },
   computed: {
@@ -110,9 +117,12 @@ async getTrack(id: any) {
        if(event.srcElement.innerHTML == "Pause") {
         this.trackPreview.pause();
         event.srcElement.innerHTML = "Play";
+        this.btnColor = "success"
       } else {
         event.srcElement.innerHTML = "Pause";
+         this.btnColor = "danger"
       this.trackPreview.play();
+      setInterval(() => {this.trackPreview.pause(); event.srcElement.innerHTML = "Play"; this.btnColor = "success"; }, 30000);
       }
     },
     goBack() {
@@ -154,12 +164,6 @@ audio {
   position: relative;
   right: 3%;
   width: 100%;
-}
-
-/* Back button */
-
-ion-back-button {
-  width: 20%;
 }
 
 /* Mobile CSS */
