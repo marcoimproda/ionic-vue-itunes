@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>IonVueTunes🎵</ion-title>
+        <ion-title class="fixBtn">IonVueTunes🎵</ion-title>
       </ion-toolbar>
     </ion-header>
     
@@ -76,7 +76,6 @@ async getSearch(payload: any) {
           message: 'Operation completed',
           duration: 2000
         });
-        this.userInput = '';
       return toast.present();
         });
     },
@@ -97,7 +96,7 @@ async getSearch(payload: any) {
     },
     gotoPage(id: any) {
         this.router.push("/card/" + id);
-    },
+    }
   }
 });
 </script>
@@ -105,7 +104,6 @@ async getSearch(payload: any) {
 <style scoped>
 #container {
   text-align: center;
-  
   position: absolute;
   left: 0;
   right: 0;
@@ -121,9 +119,7 @@ async getSearch(payload: any) {
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
   color: #8c8c8c;
-  
   margin: 0;
 }
 
@@ -144,6 +140,13 @@ async getSearch(payload: any) {
 .card {
   width: 30%; 
   border-radius: 5%;
+}
+
+/* Back button Fix */
+
+.fixBtn {
+  position: relative;
+  left: 3.2rem;
 }
 
 /* Mobile CSS */

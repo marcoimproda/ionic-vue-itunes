@@ -2,8 +2,12 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-          <ion-title>IonVueTunes🎵</ion-title>
-          <ion-back-button @click="goBack()">Go Back</ion-back-button>
+          <ion-buttons slot="start">
+          <ion-back-button @click="goBack()">
+                    <ion-icon :icon="arrowBackOutline"></ion-icon>
+                </ion-back-button>
+                <ion-title>IonVueTunes🎵</ion-title>
+                </ion-buttons>
       </ion-toolbar>
     </ion-header>
     
@@ -32,6 +36,13 @@
                       <a :href="track.trackViewUrl" target="_blank"><ion-button>More</ion-button></a>
           </div>
         </ion-card-content>
+      </ion-card>
+      </div>
+      <div class="container" v-if="!track">
+      <ion-card class="card">
+        <ion-card-header>
+        <ion-card-title>Track not found</ion-card-title>
+        </ion-card-header>
       </ion-card>
       </div>
     </ion-content>
