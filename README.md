@@ -7,4 +7,6 @@ The PWA is available here:
 https://ionicvuetunes.netlify.app/
 
 # Deploy Mobile
-The APK for Android devices is availabe [here](https://github.com/marcoimproda/ionic-vue-itunes/releases/tag/1.0).
+The application is available on Google Play Store and Huawei AppGallery and there is a separate branch for the Store version [here](https://github.com/marcoimproda/ionic-vue-itunes/tree/storeVersion).
+<a href='https://play.google.com/store/apps/details?id=com_ionic_vue_tunes.app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://appgallery.cloud.huawei.com/ag/n/app/C104369939?channelId=Github&referrer=github&id=78e907eac6ff486a937de382dc6dd0ce&s=8A7297EC1748700F739989603D1F4AF1DFAE77E2E2F4A796B551CB4EFAFA418A&detailType=0&v='><img alt='Get it on Huawei AppGallery' src='https://upload.wikimedia.org/wikipedia/commons/e/e7/Huawei_AppGallery_white_badge_EN.png'/></a>
